@@ -1,0 +1,7 @@
+columns:
+    sector_code: integer
+    sector_name: string
+    display_level: integer
+    selectable: boolean
+    sort_sequence: integer
+has_header: True

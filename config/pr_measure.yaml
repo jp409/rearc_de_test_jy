@@ -1,0 +1,7 @@
+columns:
+    measure_code: integer
+    measure_text: string
+    display_level: integer
+    selectable: boolean
+    sort_sequence: integer
+has_header: True

@@ -1,0 +1,6 @@
+columns:
+    series_id: string
+    year: integer
+    quarter: string
+    value: float
+has_header: False

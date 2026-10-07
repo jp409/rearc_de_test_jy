@@ -1,0 +1,4 @@
+columns:
+    footnote_code: integer
+    footnote_text: string
+has_header: True

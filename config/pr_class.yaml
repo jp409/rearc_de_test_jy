@@ -1,0 +1,7 @@
+columns:
+    class_code: integer
+    class_text: string
+    display_level: integer
+    selectable: boolean
+    sort_sequence: integer
+has_header: True

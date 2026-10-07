@@ -1,0 +1,4 @@
+columns:
+    seasonal_code: string
+    seasonal_text: string
+has_header: True

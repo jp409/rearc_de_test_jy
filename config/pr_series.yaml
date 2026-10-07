@@ -1,0 +1,14 @@
+columns:
+    series_id: string
+    sector_code: integer
+    class_code: integer
+    measure_code: integer
+    duration_code: integer
+    seasonal: string
+    base_year: integer
+    footnote_codes: string
+    begin_year: integer
+    begin_period: string
+    end_year: integer
+    end_period: string
+has_header: True
