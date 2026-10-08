@@ -1,5 +1,17 @@
-columns:
-    period: string
-    period_abbr: string
-    period_name: string
-has_header: True
+source:
+    file: pr.period
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    period:
+      type: string
+      nullable: false
+    period_abbr:
+      type: string
+      nullable: false
+    period_name:
+      type: string
+      nullable: false

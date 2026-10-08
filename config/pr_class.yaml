@@ -1,7 +1,23 @@
-columns:
-    class_code: integer
-    class_text: string
-    display_level: integer
-    selectable: boolean
-    sort_sequence: integer
-has_header: True
+source:
+  file: pr.class
+bronze:
+  enabled: true
+silver:
+    enabled: true
+    has_header: True
+    columns:
+      class_code:
+        type: integer
+        nullable: false
+      class_text:
+        type: string
+        nullable: false
+      display_level:
+        type: integer
+        nullable: false
+      selectable:
+        type: boolean
+        nullable: false
+      sort_sequence:
+        type: integer
+        nullable: false

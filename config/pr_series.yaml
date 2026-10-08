@@ -1,14 +1,47 @@
-columns:
-    series_id: string
-    sector_code: integer
-    class_code: integer
-    measure_code: integer
-    duration_code: integer
-    seasonal: string
-    base_year: integer
-    footnote_codes: string
-    begin_year: integer
-    begin_period: string
-    end_year: integer
-    end_period: string
-has_header: True
+source:
+    file: pr.series
+source:
+  file: pr.data.1.AllData
+
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    series_id:
+      type: string
+      nullable: false
+    sector_code:
+      type: integer
+      nullable: false
+    class_code:
+      type: integer
+      nullable: false
+    measure_code:
+      type: integer
+      nullable: false
+    duration_code:
+      type: integer
+      nullable: false
+    seasonal:
+      type: string
+      nullable: false
+    base_year:
+      type: integer
+      nullable: false
+    footnote_codes:
+      type: string
+      nullable: true
+    begin_year:
+      type: integer
+      nullable: false
+    begin_period:
+      type: string
+      nullable: false
+    end_year:
+      type: integer
+      nullable: false
+    end_period:
+      type: string
+      nullable: false

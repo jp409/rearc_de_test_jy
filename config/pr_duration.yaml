@@ -1,7 +1,23 @@
-columns:
-    duration_code: integer
-    duration_text: string
-    display_level: integer
-    selectable: boolean
-    sort_sequence: integer
-has_header: True
+source:
+    file: pr.duration
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    duration_code:
+      type: integer
+      nullable: false
+    duration_text:
+      type: string
+      nullable: false
+    display_level:
+      type: integer
+      nullable: false
+    selectable:
+      type: boolean
+      nullable: false
+    sort_sequence:
+      type: integer
+      nullable: false

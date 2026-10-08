@@ -1,7 +1,23 @@
-columns:
-    measure_code: integer
-    measure_text: string
-    display_level: integer
-    selectable: boolean
-    sort_sequence: integer
-has_header: True
+source:
+    file: pr.measure
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    measure_code:
+      type: integer
+      nullable: false
+    measure_text:
+      type: string
+      nullable: false
+    display_level:
+      type: integer
+      nullable: false
+    selectable:
+      type: boolean
+      nullable: false
+    sort_sequence:
+      type: integer
+      nullable: false

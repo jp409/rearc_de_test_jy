@@ -1,4 +1,14 @@
-columns:
-    seasonal_code: string
-    seasonal_text: string
-has_header: True
+source:
+    file: pr.seasonal
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    seasonal_code:
+      type: string
+      nullable: false
+    seasonal_text:
+      type: string
+      nullable: false

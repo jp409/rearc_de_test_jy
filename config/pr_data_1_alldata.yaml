@@ -1,6 +1,20 @@
-columns:
-    series_id: string
-    year: integer
-    quarter: string
-    value: float
-has_header: False
+source:
+    file: pr.data.1.alldata
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: false
+  columns:
+    series_id:
+      type: string
+      nullable: false
+    year:
+      type: integer
+      nullable: false
+    quarter:
+      type: string
+      nullable: false
+    value:
+      type: float
+      nullable: false

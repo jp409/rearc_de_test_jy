@@ -1,7 +1,23 @@
-columns:
-    sector_code: integer
-    sector_name: string
-    display_level: integer
-    selectable: boolean
-    sort_sequence: integer
-has_header: True
+source:
+    file: pr.sector
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  has_header: true
+  columns:
+    sector_code:
+      type: integer
+      nullable: false
+    sector_name:
+      type: string
+      nullable: false
+    display_level:
+      type: integer
+      nullable: false
+    selectable:
+      type: boolean
+      nullable: false
+    sort_sequence:
+      type: integer
+      nullable: false

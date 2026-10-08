@@ -1,4 +1,6 @@
-columns:
-    footnote_code: integer
-    footnote_text: string
-has_header: True
+source:
+    file: pr.footnote
+bronze:
+  enabled: true
+silver:
+  enabled: false

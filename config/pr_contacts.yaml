@@ -1,0 +1,6 @@
+source:
+  file: pr.contacts
+bronze:
+  enabled: true
+silver:
+  enabled: false

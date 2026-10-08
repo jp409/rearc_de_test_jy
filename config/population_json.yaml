@@ -1,0 +1,24 @@
+source:
+  file: population.json
+  format: json
+bronze:
+  enabled: true
+silver:
+  enabled: true
+  columns:
+    nation_id:
+      source: "Nation ID"
+      type: string
+      nullable: false
+    nation:
+      source: "Nation"
+      type: string
+      nullable: false
+    year:
+      source: "Year"
+      type: integer
+      nullable: false
+    population:
+      source: "Population"
+      type: double
+      nullable: false
