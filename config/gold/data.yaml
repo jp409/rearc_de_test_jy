@@ -1,0 +1,14 @@
+table_name: data
+sql: |
+  SELECT
+    all_data.year,
+    all_data.quarter,
+    all_data.value,
+    series.sector_code,
+    series.class_code,
+    series.measure_code,
+    series.duration_code,
+    series.seasonal
+  FROM
+  workspace.silver.silver_pr_data_1_alldata all_data
+  left join workspace.silver.silver_pr_series series on all_data.series_id = series.series_id

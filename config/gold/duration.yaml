@@ -1,0 +1,8 @@
+table_name: duration
+sql: |
+  SELECT
+  DISTINCT
+    duration_code,
+    duration_text
+  FROM
+  workspace.silver.silver_pr_duration

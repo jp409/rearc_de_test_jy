@@ -1,0 +1,8 @@
+table_name: population
+sql: |
+  SELECT
+    nation_id,
+    year,
+    population
+  FROM
+  workspace.silver.silver_population_json

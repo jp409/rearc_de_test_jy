@@ -1,0 +1,8 @@
+table_name: country
+sql: |
+  SELECT
+  DISTINCT
+    nation_id,
+    nation
+  FROM
+  workspace.silver.silver_population_json

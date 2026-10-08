@@ -1,0 +1,8 @@
+table_name: period
+sql: |
+  SELECT
+  DISTINCT
+    period,
+    period_name
+  FROM
+  workspace.silver.silver_pr_period

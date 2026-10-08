@@ -1,0 +1,8 @@
+table_name: measure
+sql: |
+  SELECT
+  DISTINCT
+    measure_code,
+    measure_text
+  FROM
+  workspace.silver.silver_pr_measure

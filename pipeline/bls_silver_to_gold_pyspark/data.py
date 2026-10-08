@@ -19,6 +19,7 @@ def create_gold_data_table():
             "left",
         )
         .select(
+            silver_data.series_id,
             silver_data.year,
             silver_data.quarter,
             silver_data.value,

@@ -1,0 +1,8 @@
+table_name: class
+sql: |
+  SELECT
+  DISTINCT
+    class_code,
+    class_text
+  FROM
+  workspace.silver.silver_pr_class

@@ -1,0 +1,8 @@
+table_name: seasonal
+sql: |
+  SELECT
+  DISTINCT
+    sector_code,
+    sector_name
+  FROM
+  workspace.silver.silver_pr_sector
