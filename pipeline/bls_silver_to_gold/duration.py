@@ -8,7 +8,7 @@ def create_gold_duration_table():
         spark.read.table("workspace.silver.silver_pr_duration")
         .select(
             "duration_code",
-            "duration_name",
+            "duration_text",
         )
         .dropDuplicates([
             "duration_code",

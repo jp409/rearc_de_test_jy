@@ -8,7 +8,7 @@ def create_gold_seasonal_table():
         spark.read.table("workspace.silver.silver_pr_seasonal")
         .select(
             "seasonal_code",
-            "seasonal_name",
+            "seasonal_text",
         )
         .dropDuplicates([
             "seasonal_code",
