@@ -1,7 +1,8 @@
 from pyspark import pipelines as dp
+import os
 
 
-BASE_PATH = "/Volumes/workspace/default/rearctest"
+BASE_PATH = "/Volumes/workspace/raw/raw"
 
 def create_bronze_table(file_name):
     table_name = "bronze_" + file_name.replace(".", "_")
