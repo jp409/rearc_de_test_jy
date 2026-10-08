@@ -5,7 +5,7 @@ from pyspark import pipelines as dp
 def create_gold_data_table():
 
     silver_data = spark.read.table(
-        "workspace.silver.silver_pr_data_0_current"
+        "workspace.silver.silver_pr_data_1_alldata"
     )
     silver_series = spark.read.table(
         "workspace.silver.silver_pr_series"

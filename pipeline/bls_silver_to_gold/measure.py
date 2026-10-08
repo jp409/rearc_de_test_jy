@@ -8,7 +8,7 @@ def create_gold_measure_table():
         spark.read.table("workspace.silver.silver_pr_measure")
         .select(
             "measure_code",
-            "measure_name",
+            "measure_text",
         )
         .dropDuplicates([
             "measure_code",
