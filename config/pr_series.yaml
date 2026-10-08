@@ -1,8 +1,5 @@
 source:
     file: pr.series
-source:
-  file: pr.data.1.AllData
-
 bronze:
   enabled: true
 silver:
