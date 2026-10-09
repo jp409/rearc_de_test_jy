@@ -25,7 +25,8 @@ def register_table(config):
         return spark.sql(sql)
 
     query.__name__ = f"gold_{table_name}"
-
+    print(f"table name: {table_name}")
+    print(f"query: {query}")
     dp.table(name=table_name)(query)
 
 

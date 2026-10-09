@@ -1,14 +1,45 @@
 table_name: data
 sql: |
-  SELECT
-    all_data.year,
-    all_data.quarter,
-    all_data.value,
+  WITH combined_data AS (
+    SELECT
+        all_data.series_id,
+        all_data.year,
+        all_data.quarter,
+        all_data.value,
+        2 AS priority
+    FROM workspace.silver.silver_pr_data_1_alldata all_data
+
+    UNION ALL
+
+    SELECT
+        current_data.series_id,
+        current_data.year,
+        current_data.quarter,
+        current_data.value,
+        1 AS priority
+    FROM workspace.silver.silver_pr_data_0_current current_data
+),
+
+deduplicated AS (
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY series_id, year, quarter
+            ORDER BY priority
+        ) AS rn
+    FROM combined_data
+)
+
+SELECT
+    deduped_data.year,
+    deduped_data.quarter,
+    deduped_data.value,
     series.sector_code,
     series.class_code,
     series.measure_code,
     series.duration_code,
     series.seasonal
-  FROM
-  workspace.silver.silver_pr_data_1_alldata all_data
-  left join workspace.silver.silver_pr_series series on all_data.series_id = series.series_id
+FROM deduplicated deduped_data
+LEFT JOIN workspace.silver.silver_pr_series series
+    ON deduped_data.series_id = series.series_id
+WHERE deduped_data.rn = 1
