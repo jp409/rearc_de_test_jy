@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import requests
@@ -6,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
+from delta.tables import DeltaTable
+from pyspark.sql import functions as F
 from pyspark.sql.types import (
     StructType,
     StructField,
@@ -20,6 +23,7 @@ from pyspark.sql.types import (
 # ==================================================
 
 BLS_URL = "https://download.bls.gov/pub/time.series/pr/"
+
 DATAUSA_URL = (
     "https://honolulu-api.datausa.io/tesseract/data.jsonrecords"
     "?cube=acs_yg_total_population_1"
@@ -30,7 +34,6 @@ DATAUSA_URL = (
 
 VOLUME_PATH = Path("/Volumes/workspace/raw/bls")
 
-# Change these if your catalog/schema differ.
 CATALOG = "workspace"
 SCHEMA = "raw"
 TABLE_NAME = "ingestion_metadata"
@@ -40,33 +43,42 @@ HEADERS = {
     "User-Agent": "my-databricks-ingestion/1.0"
 }
 
-CHUNK_SIZE = 1024 * 1024  # 1 MB
+CHUNK_SIZE = 1024 * 1024
 
 
 # ==================================================
-# Unity Catalog table
+# Spark schemas and table initialization
 # ==================================================
+
+METADATA_SCHEMA = StructType([
+    StructField("source_name", StringType(), False),
+    StructField("file_name", StringType(), False),
+    StructField("source_url", StringType(), True),
+    StructField("etag", StringType(), True),
+    StructField("last_modified", StringType(), True),
+    StructField("content_length", StringType(), True),
+    StructField("downloaded_size_bytes", LongType(), True),
+    StructField("last_successful_ingestion", TimestampType(), True),
+    StructField("last_checked_at", TimestampType(), False),
+    StructField("status", StringType(), False),
+    StructField("error_message", StringType(), True),
+])
 
 VOLUME_PATH.mkdir(parents=True, exist_ok=True)
 
-spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG}.{SCHEMA}")
+spark.catalog.createDatabase(
+    f"{CATALOG}.{SCHEMA}",
+    ifNotExists=True,
+)
 
-spark.sql(f"""
-    CREATE TABLE IF NOT EXISTS {TABLE} (
-        source_name STRING,
-        file_name STRING,
-        source_url STRING,
-        etag STRING,
-        last_modified STRING,
-        content_length STRING,
-        downloaded_size_bytes BIGINT,
-        last_successful_ingestion TIMESTAMP,
-        last_checked_at TIMESTAMP,
-        status STRING,
-        error_message STRING
-    )
-    USING DELTA
-""")
+empty_df = spark.createDataFrame([], METADATA_SCHEMA)
+
+(
+    empty_df.write
+    .format("delta")
+    .mode("ignore")
+    .saveAsTable(TABLE)
+)
 
 
 # ==================================================
@@ -79,12 +91,13 @@ def utc_now():
 
 
 def get_existing_metadata(source_name: str, file_name: str):
-    df = spark.table(TABLE)
+    """Return the existing metadata record, if present."""
 
     rows = (
-        df.filter(
-            (df["source_name"] == source_name)
-            & (df["file_name"] == file_name)
+        spark.table(TABLE)
+        .filter(
+            (F.col("source_name") == source_name)
+            & (F.col("file_name") == file_name)
         )
         .limit(1)
         .collect()
@@ -106,11 +119,11 @@ def record_metadata(
     error_message=None,
 ):
     """
-    Insert or update the latest metadata record.
+    Insert or update metadata using the Delta Lake Python API.
 
-    Successful downloads update the source metadata and successful
-    ingestion timestamp. Failed downloads preserve the last known
-    successful metadata and timestamp.
+    Successful downloads update the last-known file metadata.
+    Failed and unchanged checks preserve the last successful
+    ingestion metadata and timestamp.
     """
 
     row = {
@@ -127,99 +140,52 @@ def record_metadata(
         "error_message": error_message,
     }
 
-    schema = StructType([
-        StructField("source_name", StringType(), False),
-        StructField("file_name", StringType(), False),
-        StructField("source_url", StringType(), True),
-        StructField("etag", StringType(), True),
-        StructField("last_modified", StringType(), True),
-        StructField("content_length", StringType(), True),
-        StructField("downloaded_size_bytes", LongType(), True),
-        StructField("last_successful_ingestion", TimestampType(), True),
-        StructField("last_checked_at", TimestampType(), False),
-        StructField("status", StringType(), False),
-        StructField("error_message", StringType(), True),
-    ])
+    source_df = spark.createDataFrame(
+        [row],
+        schema=METADATA_SCHEMA,
+    ).alias("source")
 
-    source_df = spark.createDataFrame([row], schema=schema)
-    view_name = "incoming_ingestion_metadata"
+    target = DeltaTable.forName(spark, TABLE).alias("target")
 
-    source_df.createOrReplaceTempView(view_name)
+    condition = (
+        (F.col("target.source_name") == F.col("source.source_name"))
+        & (F.col("target.file_name") == F.col("source.file_name"))
+    )
 
-    # Preserve last known successful metadata on failures and
-    # unchanged checks. Update metadata only after a new download.
-    spark.sql(f"""
-        MERGE INTO {TABLE} AS target
-        USING {view_name} AS source
-        ON target.source_name = source.source_name
-           AND target.file_name = source.file_name
+    success = F.col("source.status") == F.lit("SUCCESS")
 
-        WHEN MATCHED THEN UPDATE SET
-            target.source_url = source.source_url,
+    success_fields = [
+        "etag",
+        "last_modified",
+        "content_length",
+        "downloaded_size_bytes",
+        "last_successful_ingestion",
+    ]
 
-            target.etag = CASE
-                WHEN source.status = 'SUCCESS'
-                THEN source.etag
-                ELSE target.etag
-            END,
+    updates = {
+        "source_url": F.col("source.source_url"),
+        "last_checked_at": F.col("source.last_checked_at"),
+        "status": F.col("source.status"),
+        "error_message": F.col("source.error_message"),
+    }
 
-            target.last_modified = CASE
-                WHEN source.status = 'SUCCESS'
-                THEN source.last_modified
-                ELSE target.last_modified
-            END,
-
-            target.content_length = CASE
-                WHEN source.status = 'SUCCESS'
-                THEN source.content_length
-                ELSE target.content_length
-            END,
-
-            target.downloaded_size_bytes = CASE
-                WHEN source.status = 'SUCCESS'
-                THEN source.downloaded_size_bytes
-                ELSE target.downloaded_size_bytes
-            END,
-
-            target.last_successful_ingestion = CASE
-                WHEN source.status = 'SUCCESS'
-                THEN source.last_successful_ingestion
-                ELSE target.last_successful_ingestion
-            END,
-
-            target.last_checked_at = source.last_checked_at,
-            target.status = source.status,
-            target.error_message = source.error_message
-
-        WHEN NOT MATCHED THEN INSERT (
-            source_name,
-            file_name,
-            source_url,
-            etag,
-            last_modified,
-            content_length,
-            downloaded_size_bytes,
-            last_successful_ingestion,
-            last_checked_at,
-            status,
-            error_message
+    for field in success_fields:
+        updates[field] = (
+            F.when(success, F.col(f"source.{field}"))
+            .otherwise(F.col(f"target.{field}"))
         )
-        VALUES (
-            source.source_name,
-            source.file_name,
-            source.source_url,
-            source.etag,
-            source.last_modified,
-            source.content_length,
-            source.downloaded_size_bytes,
-            source.last_successful_ingestion,
-            source.last_checked_at,
-            source.status,
-            source.error_message
-        )
-    """)
 
-    spark.catalog.dropTempView(view_name)
+    inserts = {
+        field: F.col(f"source.{field}")
+        for field in METADATA_SCHEMA.fieldNames()
+    }
+
+    (
+        target.merge(source_df, condition)
+        .whenMatchedUpdate(set=updates)
+        .whenNotMatchedInsert(values=inserts)
+        .execute()
+    )
 
 
 def metadata_matches(remote, previous):
@@ -250,7 +216,6 @@ def metadata_matches(remote, previous):
             == remote["content_length"]
         )
 
-    # Cannot reliably establish that the file is unchanged.
     return False
 
 
@@ -260,12 +225,12 @@ def download_response_to_file(response, output_path):
     temp_path = output_path.with_name(output_path.name + ".tmp")
 
     try:
-        with open(temp_path, "wb") as f:
+        with open(temp_path, "wb") as file:
             for chunk in response.iter_content(
                 chunk_size=CHUNK_SIZE
             ):
                 if chunk:
-                    f.write(chunk)
+                    file.write(chunk)
 
         os.replace(temp_path, output_path)
 
@@ -284,13 +249,12 @@ def ingest_bls_file(session, file_url, filename):
 
     previous = get_existing_metadata(source_name, filename)
 
-    # Conditional requests only make sense when we have both
-    # a local file and previously recorded metadata.
     request_headers = {}
 
     if output_path.is_file() and previous is not None:
         if previous.get("etag"):
             request_headers["If-None-Match"] = previous["etag"]
+
         elif previous.get("last_modified"):
             request_headers["If-Modified-Since"] = (
                 previous["last_modified"]
@@ -306,7 +270,7 @@ def ingest_bls_file(session, file_url, filename):
             timeout=120,
         ) as response:
 
-            # Conditional GET: server confirms existing copy is current.
+            # Server confirms the local copy is current.
             if response.status_code == 304 and output_path.is_file():
                 record_metadata(
                     source_name=source_name,
@@ -314,6 +278,7 @@ def ingest_bls_file(session, file_url, filename):
                     source_url=file_url,
                     status="UNCHANGED",
                 )
+
                 print("  Unchanged (HTTP 304); skipped.")
                 return "skipped"
 
@@ -329,8 +294,7 @@ def ingest_bls_file(session, file_url, filename):
             print(f"  ETag: {remote['etag']}")
             print(f"  Content-Length: {remote['content_length']}")
 
-            # Some servers ignore conditional request headers.
-            # Compare response metadata before consuming the body.
+            # Handle servers that ignore conditional request headers.
             if (
                 output_path.is_file()
                 and metadata_matches(remote, previous)
@@ -341,10 +305,10 @@ def ingest_bls_file(session, file_url, filename):
                     source_url=file_url,
                     status="UNCHANGED",
                 )
+
                 print("  Metadata matches; skipped download.")
                 return "skipped"
 
-            # New or changed file: download the response.
             download_response_to_file(response, output_path)
 
         size_bytes = output_path.stat().st_size
@@ -362,23 +326,29 @@ def ingest_bls_file(session, file_url, filename):
             status="SUCCESS",
         )
 
-        print(f"  Downloaded: {output_path} ({size_bytes:,} bytes)")
+        print(
+            f"  Downloaded: {output_path} ({size_bytes:,} bytes)"
+        )
         print("  Metadata table updated.")
 
         return "downloaded"
 
-    except (requests.RequestException, OSError) as e:
+    except (requests.RequestException, OSError) as error:
         record_metadata(
             source_name=source_name,
             file_name=filename,
             source_url=file_url,
             status="FAILED",
-            error_message=str(e),
+            error_message=str(error),
         )
 
-        print(f"  ERROR: {e}")
+        print(f"  ERROR: {error}")
         return "failed"
 
+
+# ==================================================
+# Discover and ingest BLS files
+# ==================================================
 
 print("Fetching BLS directory listing...")
 
@@ -474,19 +444,16 @@ try:
             )
 
             try:
-                # Validate the JSON before replacing the existing file.
-                # Download the response into a temporary file first.
-                with open(temp_path, "wb") as f:
+                with open(temp_path, "wb") as file:
                     for chunk in response.iter_content(
                         chunk_size=CHUNK_SIZE
                     ):
                         if chunk:
-                            f.write(chunk)
+                            file.write(chunk)
 
-                import json
-
-                with open(temp_path, "r", encoding="utf-8") as f:
-                    json.load(f)
+                # Validate JSON before replacing the existing file.
+                with open(temp_path, "r", encoding="utf-8") as file:
+                    json.load(file)
 
                 os.replace(temp_path, population_path)
 
@@ -509,26 +476,13 @@ try:
     print(f"Saved: {population_path}")
     print("DataUSA metadata table updated.")
 
-except (requests.RequestException, OSError, ValueError) as e:
+except (requests.RequestException, OSError, ValueError) as error:
     record_metadata(
         source_name=population_source,
         file_name="population.json",
         source_url=DATAUSA_URL,
         status="FAILED",
-        error_message=str(e),
+        error_message=str(error),
     )
 
-    print(f"ERROR downloading population data: {e}")
-
-
-# ==================================================
-# Summary
-# ==================================================
-
-print(f"\nMetadata table: {TABLE}")
-print("Ingestion run finished.")
-
-display(
-    spark.table(TABLE)
-    .orderBy("source_name", "file_name")
-)
+    print(f"ERROR downloading population data: {error}")

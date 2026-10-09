@@ -22,3 +22,12 @@
 ## AI Usage
 ## Retrospective
 ## Answers
+###PySpark
+1. answer
+2. answer
+3. answer
+
+###SQL
+1. answer
+2. answer
+3. answer
