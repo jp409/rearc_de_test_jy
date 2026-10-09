@@ -138,37 +138,21 @@ def sha256(path):
             digest.update(chunk)
     return digest.hexdigest()
 
-
 # ==================================================
 # Download helper
 # ==================================================
 
 def download(session, url, path, source, validate_json=False):
-    """Download only changed content; preserve existing files on failure."""
+    """Download changed content; preserve existing files on failure."""
 
     filename = path.name
     previous = get_metadata(source, filename)
-    headers = {}
-
-    if path.is_file() and previous:
-        if previous.get("etag"):
-            headers["If-None-Match"] = previous["etag"]
-        elif previous.get("last_modified"):
-            headers["If-Modified-Since"] = previous["last_modified"]
-
     temp = path.with_name(path.name + ".tmp")
+
     print(f"\nChecking: {filename}")
 
     try:
-        with session.get(
-            url, headers=headers, stream=True, timeout=120
-        ) as response:
-
-            if response.status_code == 304 and path.is_file():
-                record_metadata(source, filename, url, "UNCHANGED")
-                print("  Unchanged; skipped.")
-                return "skipped"
-
+        with session.get(url, stream=True, timeout=120) as response:
             response.raise_for_status()
 
             remote = {
@@ -176,6 +160,18 @@ def download(session, url, path, source, validate_json=False):
                 "last_modified": response.headers.get("Last-Modified"),
                 "content_length": response.headers.get("Content-Length"),
             }
+
+            # Skip if the server ETag matches the metadata table.
+            if (
+                not validate_json
+                and path.is_file()
+                and previous
+                and remote["etag"]
+                and previous.get("etag") == remote["etag"]
+            ):
+                record_metadata(source, filename, url, "UNCHANGED")
+                print("  ETag unchanged; skipped.")
+                return "skipped"
 
             with open(temp, "wb") as file:
                 for chunk in response.iter_content(CHUNK_SIZE):
@@ -186,31 +182,11 @@ def download(session, url, path, source, validate_json=False):
             with open(temp, encoding="utf-8") as file:
                 json.load(file)
 
-        unchanged = (
-            path.is_file()
-            and sha256(path) == sha256(temp)
-        ) if validate_json else (
-            path.is_file()
-            and previous is not None
-            and (
-                (
-                    remote["etag"] is not None
-                    and previous.get("etag") == remote["etag"]
-                )
-                or (
-                    remote["etag"] is None
-                    and remote["last_modified"] is not None
-                    and remote["content_length"] is not None
-                    and previous.get("last_modified") == remote["last_modified"]
-                    and previous.get("content_length") == remote["content_length"]
-                )
-            )
-        )
-
-        if unchanged and previous:
-            record_metadata(source, filename, url, "UNCHANGED")
-            print("  Unchanged; existing file preserved.")
-            return "skipped"
+            # DataUSA doesn't provide a reliable ETag; compare file content.
+            if path.is_file() and sha256(path) == sha256(temp):
+                record_metadata(source, filename, url, "UNCHANGED")
+                print("  Content unchanged; skipped.")
+                return "skipped"
 
         os.replace(temp, path)
 
@@ -231,7 +207,6 @@ def download(session, url, path, source, validate_json=False):
     finally:
         if temp.exists():
             temp.unlink()
-
 
 # ==================================================
 # BLS ingestion
