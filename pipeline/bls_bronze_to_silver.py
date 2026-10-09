@@ -115,27 +115,34 @@ def spark_type(type_name):
     return TYPE_MAP[normalized]
 
 
-def normalize_value(column):
+def normalize_value(column, type_name):
     """
-    Convert empty strings to NULL before casting.
-    """
+    For string columns:
+      - Trim leading and trailing whitespace.
+      - Convert empty strings to NULL.
 
-    return F.when(
-        F.trim(column) == "",
-        F.lit(None),
-    ).otherwise(column)
+    Other types are returned unchanged before casting.
+    """
+    if type_name.lower() == "string":
+        trimmed = F.trim(column)
+
+        return F.when(
+            trimmed == "",
+            F.lit(None).cast(StringType()),
+        ).otherwise(trimmed)
+
+    return column
 
 
 def cast_column(column, column_config):
     """
-    Apply the configured Spark type.
+    Normalize string values, then apply the configured Spark type.
     """
-
     type_name = column_config["type"]
 
-    return normalize_value(column).cast(
-        spark_type(type_name)
-    )
+    normalized = normalize_value(column, type_name)
+
+    return normalized.cast(spark_type(type_name))
 
 
 def apply_nullability_filter(df, columns_config):
