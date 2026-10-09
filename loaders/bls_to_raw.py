@@ -20,7 +20,6 @@ from pyspark.sql.types import (
 # ==================================================
 
 BLS_URL = "https://download.bls.gov/pub/time.series/pr/"
-
 DATAUSA_URL = (
     "https://honolulu-api.datausa.io/tesseract/data.jsonrecords"
     "?cube=acs_yg_total_population_1"
