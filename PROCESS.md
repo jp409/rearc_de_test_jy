@@ -1,2 +1,6 @@
-# rearc_de_test_jy
-Rearc Lead Data Engineer Test
+# Jayson Yurcho Rearc Data Engineering Test
+## Architecture
+![image_1791566086863.png](./image_1791566086863.png "image_1791566086863.png")
+## Trade-offs
+## AI Usage
+## Retrospective
