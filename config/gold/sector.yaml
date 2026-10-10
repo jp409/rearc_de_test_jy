@@ -1,4 +1,4 @@
-table_name: seasonal
+table_name: sector
 sql: |
   SELECT
   DISTINCT
