@@ -13,7 +13,7 @@ I have built out the Databricks declarative pipeline to mirror the medallion arc
 **Please Note:** There are two Silver to Gold layer pipelines available, a PySpark version and a SQL version. 
 ### Data Ingestion 
 #### Source to Raw
-- Data is ingested from both the BLS site and the US Population Site via HTTP GET requests.
+- Data is ingested from both the BLS site and the US Population Site via HTTP GET requests. The load script is located here `loaders/bls_to_raw.py`. 
 - All files are saved in raw.BLS volume located at `/Volumes/workspace/raw/bls`. 
 - Metadata is stored in a table in the raw schema at `workspace.raw.ingestion_metadata`. 
 ![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
