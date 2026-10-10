@@ -47,6 +47,7 @@ In the interest of time, I could not implement all of the enhancements noted bel
 - Data could be appended in bronze, thereby creating historic snapshots utilizing the insert_datetime field. 
 - Pipeline code could be source controlled with CI/CD. 
 - Resources could be shared across all of Rearc. This way, consultants could save time while utilizing standardized code for specific things. 
+- Detailed logging should be added so that any issues can be quickly identified via a simple dashboard or alerts. This will also enable telemetry on the pipeline's function. 
 - Cost monitoring could be added to the pipelines. 
 ## AI Usage
 AI was used to generate the initial version of all code. Additionally, it was used in troubleshooting errors. I made the necessary modifications to the generated code myself, as well as providing the overarching design. 
