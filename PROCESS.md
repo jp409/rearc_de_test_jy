@@ -72,19 +72,19 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ![image_1791644258250.png](./images/image_1791644258250.png "image_1791644258250.png")
 ### PySpark
 1. 
-![image_1791644278772.png](./images/image_1791644278772.png "image_1791644278772.png")
+![image_1791644278772.png](./images/image_1791644278772.png "image_1791644278772.png")<br>
 2. Uncomment to add class_text, or join another table for other fields. 
-![image_1791644325251.png](./images/image_1791644325251.png "image_1791644325251.png")
+![image_1791644325251.png](./images/image_1791644325251.png "image_1791644325251.png")<br>
 3. 
-![image_1791644396338.png](./images/image_1791644396338.png "image_1791644396338.png")
+![image_1791644396338.png](./images/image_1791644396338.png "image_1791644396338.png")<br>
 
 ### SQL
 1. 
 ![image_1791644435086.png](./images/image_1791644435086.png "image_1791644435086.png")
-
+<br>
 2. 
 ![image_1791644463288.png](./images/image_1791644463288.png "image_1791644463288.png")
-
+<br>
 3. 
 ![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
 
