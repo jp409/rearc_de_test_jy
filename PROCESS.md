@@ -1,19 +1,20 @@
 # Jayson Yurcho Rearc Data Engineering Test
 ## Architecture
-The architecture of this data pipeline follows a tradtional medallion architecture.
+The architecture of this data pipeline follows the tradtional medallion architecture. I chose this because it is the current data pipeline standard and provides clean layers of functionality that are easy for Engineers to understand. 
 ![image_1791642328437.png](./images/image_1791642328437.png "image_1791642328437.png")
-Source - In this case, the BLS data folder and US Population API.
-Raw - Databricks volume located at workspace.raw.bls which stores raw files ingestes from sources. 
-Bronze - A 1:1 copy of the source data. Schema and data are unchanged. 
-Silver - Cleaned version of data. Null checks are performed here. 
-Gold - Transformed and enriched version of data. 
+**Source** - In this case, the BLS data folder and US Population APIs act as sources for this data pipeline.<br>
+**Raw** - Databricks volume which stores the raw files ingestes from sources.<br> 
+**Bronze** - The Bronze layer contains a 1:1 copy of the source data. Schema and data are unchanged. <br> 
+**Silver** - Sanitized version of data. Null checks ande-duplication are performed here. <br>
+**Gold** - Transformed and enriched version of data. Data is fully modeled and consumer-ready at the Gold layer.
 
-I have built out the Databricks declaritave pieline to mirror the Medallion architecture. 
+I have built out the Databricks declaritave pipeline to mirror the Medallion architecture. 
 ![image_1791642836338.png](./images/image_1791642836338.png "image_1791642836338.png")
+**Please Note:** There are two Silver to Gold layer pipelines available, a PySpark version and a SQL version. 
 ### Data Ingestion 
 ####Source to Raw
 - Data is ingested from both the BLS site and the us population site via Get API calls.
-- All files are saved in raw.BLS volume. 
+- All files are saved in raw.BLS volume located at `/Volumes/workspace/raw/bls`. 
 - Metadata is stored in table in raw. 
 ![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
 - Upon rerun, only files with different ETags will be redownloaded. Missing Etags will go to modified date + size compairson.  
@@ -27,7 +28,7 @@ Config files govern the Raw to Bronze load. Only files with enabled: True will b
 Config files goveren the Bronze to Silver load. Only files with enabled: True will be brought from Bronze to Silver. Data id deduplicated and checked for nulls at this layer.
 
 #### Silver to Gold
-I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment.
+I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provided users with the necessary data for arriving at the answers. See answers section for actual answers. 
 ![image_1791642902572.png](./images/image_1791642902572.png "image_1791642902572.png")
 
 #####SQL
