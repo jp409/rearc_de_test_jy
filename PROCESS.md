@@ -48,7 +48,7 @@ I have built out the Databricks declarative pipeline to mirror the medallion arc
 ![image_1791648759306.png](./images/image_1791648759306.png "image_1791648759306.png")
 
 #### Gold
-![image_1791566086863.png](./images/images/image_1791566086863.png "image_1791566086863.png")
+![image_1791566086863.png](./images/image_1791566086863.png "image_1791566086863.png")
 - The Gold layer is modeled with two 'fact' tables - Data and Population. 
 - The Data table can be joined to six dimension tables, constructed from the BLS data. 
 - The Population table only has one dimension table, country. 
@@ -61,12 +61,12 @@ In the interest of time, I could not implement all of the enhancements noted bel
 - Cost monitoring could be added to the pipelines. 
 - Rather than needing one file per Gold table (or one config for a SQL generated table), multiple tables could be configured in one file. Eventually, a repository could become so large it violates the maximum allowed size allowed by Git providers. 
 ## AI Usage
-AI was used to generate the initial version of all code. Additionally, it was used in troubleshooting errors. I made the necessary modifications to the generated code myself, as well as providing the overarching design. 
+AI (ChatGPT) was used to generate the initial version of all code. Additionally, it was used in troubleshooting errors. I made the necessary modifications to the generated code myself, as well as providing the overarching design. AI was not used to generate these docs.
 ## Retrospective
-I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionality in the pipeline. Also, the rate limits on the DBX free account prevented me from testing as much as I would have liked. 
+I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionality in the pipeline to satisfy the requirements. Also, the rate limits on the DBX free account prevented me from testing as often as I would have liked. 
 ## Answers
 1. **Mean**: 322,069,808 **STD Dev.**: 4,158,441.04
-2. Run code for full answer
+2. Run code for full answer, sample below.
 ![image_1791644134885.png](./images/image_1791644134885.png "image_1791644134885.png")
 3. The SID PRS30006032 was not present in the data! However, below is an example of the values and previous population values for the SID PRS88003191. We could filter for any other SID and get the appropriate values as well. 
 ![image_1791644258250.png](./images/image_1791644258250.png "image_1791644258250.png")
