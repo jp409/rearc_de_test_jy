@@ -66,7 +66,7 @@ AI (ChatGPT) was used to generate the initial version of all code. Additionally,
 I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionality in the pipeline to satisfy the requirements. Also, the rate limits on the DBX free account prevented me from testing as often as I would have liked. 
 ## Answers
 1. **Mean**: 322,069,808 **STD Dev.**: 4,158,441.04 <br>
-2. Run code for full answer, sample below.
+2. Run code for full answer, sample below.<br>
 ![image_1791644134885.png](./images/image_1791644134885.png "image_1791644134885.png")<br>
 3. The SID PRS30006032 was not present in the data! However, below is an example of the values and previous population values for the SID PRS88003191. We could filter for any other SID and get the appropriate values as well. 
 ![image_1791644258250.png](./images/image_1791644258250.png "image_1791644258250.png")
