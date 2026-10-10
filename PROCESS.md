@@ -43,13 +43,15 @@ I have built two examples of the Silver to Gold layer in order to satisfy the re
 - The Data table can be joined to six dimension talbes, constructed from the BLS data. 
 - The Population table only has one dimention table, country. 
 ## Trade-offs
-- Data could be appended in bronze, thereby creating historic snapshots. 
-- Source control the pipelines with CI/CD
-- Share resources accross all of Rearc. 
+In the interest of time, I could not implement all of the enhancements noted below however, the following are ways this could be improved. 
+- Data could be appended in bronze, thereby creating historic snapshots utilizingthe insert_datetime field. 
+- Pipeline code could be source controlled with CI/CD. 
+- Resources could be shared accross all of Rearc. This way, consultants could save time while utilizing standardized code for specific things. 
+- Cost monitoring could be added to the piplines. 
 ## AI Usage
-AI was used to generate the initial version of all code. Additionally, it was used in the troubleshooting of errors. 
+AI was used to generate the initial version of all code. Additionally, it was used in troubleshooting errors. I made the nexessary odifications to the generated code myself, as well as providing the overarching design. 
 ## Retrospective
-I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionalinty in the pipeline. Also, the rate limits on the free account prevented me from testing as much as I would have liked. 
+I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionalinty in the pipeline. Also, the rate limits on the DBX free account prevented me from testing as much as I would have liked. 
 ## Answers
 1. **Mean**: 322,069,808 **STD**: 4,158,441.04
 2. Run code for full answer
@@ -75,6 +77,7 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
 
 ### Dashboard
+Using the Gold modeled data, I was able to construct a rudimentary dashboard for users to explore this data. Ideally, I would have met with key business users of the data in order to gather their requirements of what they need in a dashboard. I would then construct the dashboard from there. 
 ![image_1791646361980.png](./images/image_1791646361980.png "image_1791646361980.png")
-
+Gold data model in Dashboard section: 
 ![image_1791646419901.png](./images/image_1791646419901.png "image_1791646419901.png")
