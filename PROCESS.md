@@ -43,6 +43,8 @@ I have built two examples of the Silver to Gold layer in order to satisfy the re
 - The Population table only has one Dimensional table, country. 
 ## Trade-offs
 - Data could be appended in bronze, thereby creating historic snapshots. 
+- Source control the pipelines with CI/CD
+- Share resources accross all of Rearc. 
 ## AI Usage
 AI was used to generate the initial version of all code. Additionally, it was used in the troubleshooting of errors. 
 ## Retrospective
@@ -70,3 +72,8 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 
 3. 
 ![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
+
+### Dashboard
+![image_1791646361980.png](./image_1791646361980.png "image_1791646361980.png")
+
+![image_1791646419901.png](./image_1791646419901.png "image_1791646419901.png")
