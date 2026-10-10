@@ -1,7 +1,7 @@
 # Jayson Yurcho Rearc Data Engineering Test
 ## Architecture
 The architecture of this data pipeline follows a tradtional medallion architecture.
-![image_1791642328437.png](./image_1791642328437.png "image_1791642328437.png")
+![image_1791642328437.png](./images/image_1791642328437.png "image_1791642328437.png")
 Source - In this case, the BLS data folder and US Population API.
 Raw - Databricks volume located at workspace.raw.bls which stores raw files ingestes from sources. 
 Bronze - A 1:1 copy of the source data. Schema and data are unchanged. 
@@ -9,13 +9,13 @@ Silver - Cleaned version of data. Null checks are performed here.
 Gold - Transformed and enriched version of data. 
 
 I have built out the Databricks declaritave pieline to mirror the Medallion architecture. 
-![image_1791642836338.png](./image_1791642836338.png "image_1791642836338.png")
+![image_1791642836338.png](./images/image_1791642836338.png "image_1791642836338.png")
 ### Data Ingestion 
 ####Source to Raw
 - Data is ingested from both the BLS site and the us population site via Get API calls.
 - All files are saved in raw.BLS volume. 
 - Metadata is stored in table in raw. 
-![image_1791642737587.png](./image_1791642737587.png "image_1791642737587.png")
+![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
 - Upon rerun, only files with different ETags will be redownloaded. Missing Etags will go to modified date + size compairson.  
 - All new files are always downloaded. 
 - Pipeline located here. 
@@ -28,7 +28,7 @@ Config files goveren the Bronze to Silver load. Only files with enabled: True wi
 
 #### Silver to Gold
 I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment.
-![image_1791642902572.png](./image_1791642902572.png "image_1791642902572.png")
+![image_1791642902572.png](./images/image_1791642902572.png "image_1791642902572.png")
 
 #####SQL
 - Config files provide the SQL to be ran in order to generate the Gold tables.
@@ -50,23 +50,23 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ## Answers
 1. **Mean**: 322,069,808 **STD**: 4,158,441.04
 2. Run code for full answer
-![image_1791644134885.png](./image_1791644134885.png "image_1791644134885.png")
+![image_1791644134885.png](./images/image_1791644134885.png "image_1791644134885.png")
 3. The SID PRS30006032 was not present in the data! However, below is an example of the values and previous population values for the SID PRS88003191. We could filter for any other SID and get the appropriate values as well. 
-![image_1791644258250.png](./image_1791644258250.png "image_1791644258250.png")
+![image_1791644258250.png](./images/image_1791644258250.png "image_1791644258250.png")
 ###PySpark
 1. 
-![image_1791644278772.png](./image_1791644278772.png "image_1791644278772.png")
+![image_1791644278772.png](./images/image_1791644278772.png "image_1791644278772.png")
 2. Uncomment to add class_text, or join another table for other fields. 
-![image_1791644325251.png](./image_1791644325251.png "image_1791644325251.png")
+![image_1791644325251.png](./images/image_1791644325251.png "image_1791644325251.png")
 3. 
-![image_1791644396338.png](./image_1791644396338.png "image_1791644396338.png")
+![image_1791644396338.png](./images/image_1791644396338.png "image_1791644396338.png")
 
 ###SQL
 1. 
-![image_1791644435086.png](./image_1791644435086.png "image_1791644435086.png")
+![image_1791644435086.png](./images/image_1791644435086.png "image_1791644435086.png")
 
 2. 
-![image_1791644463288.png](./image_1791644463288.png "image_1791644463288.png")
+![image_1791644463288.png](./images/image_1791644463288.png "image_1791644463288.png")
 
 3. 
-![image_1791644493453.png](./image_1791644493453.png "image_1791644493453.png")
+![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
