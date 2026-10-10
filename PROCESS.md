@@ -19,23 +19,28 @@ I have built out the Databricks declarative pipeline to mirror the medallion arc
 ![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
 - Upon rerun, only files with different ETags will be redownloaded. Tables with missing ETags will be compared with modified date + size comparison. This ensures that only new or updated data gets ingested. 
 - All new files are always downloaded. 
-- Loader is located here `loaders/bls_to_raw.py`. 
+- Loader is located here `loaders/bls_to_raw.py`. <br>
+![image_1791648815831.png](./image_1791648815831.png "image_1791648815831.png")
 
 #### Raw to Bronze
-Config files govern the Raw to Bronze load. Config files are located here `config`. Only files with `enabled: True` will be brought from raw to Bronze. The field insert_datetime is added to all records for troubleshooting or reporting purposes. A possible functionality expansion could be to store snapshots based on this field. 
+Config files govern the Raw to Bronze load. Config files are located here `config`. Only files with `enabled: True` will be brought from raw to Bronze. The field insert_datetime is added to all records for troubleshooting or reporting purposes. A possible functionality expansion could be to store snapshots based on this field. <br>
+![image_1791648835246.png](./image_1791648835246.png "image_1791648835246.png")
 
 #### Bronze to Silver
-Config files govern the Bronze to Silver load. Config files are located here `config`. Only files with `enabled: True` will be brought from Bronze to Silver. Data is deduplicated and checked for nulls at this layer. Schema is configured in the config files as well. 
+Config files govern the Bronze to Silver load. Config files are located here `config`. Only files with `enabled: True` will be brought from Bronze to Silver. Data is deduplicated and checked for nulls at this layer. Schema is configured in the config files as well. <br>
+![image_1791648859397.png](./image_1791648859397.png "image_1791648859397.png")
 
 #### Silver to Gold
-I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provided users with the necessary data for arriving at the answers. See answers section for actual answers. 
+I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provided users with the necessary data for arriving at the answers. See answers section for actual answers. <br>
 ![image_1791642902572.png](./images/image_1791642902572.png "image_1791642902572.png")
 
 #####SQL
-- Config files provide the SQL to be ran in order to generate the Gold tables. Config files are located here `config/gold`. A generic loader loops through the config files and materializes only those with `enabled: True` configured. The SQL query is configurable in the files.
+- Config files provide the SQL to be ran in order to generate the Gold tables. Config files are located here `config/gold`. A generic loader loops through the config files and materializes only those with `enabled: True` configured. The SQL query is configurable in the files.<br>
+![image_1791648787241.png](./image_1791648787241.png "image_1791648787241.png")
 
 #####PySpark
-- Each table gets its own .py file containing the PySpark necessary to generate the tables. Pipeline files are located here `pipeline/bls_silver_to_gold_pyspark`. Personally, I prefer the PySpark approach to the SQL approach. I just prefer working with PySpark in a notebook to SQL in the instance of a DBX pipeline. 
+- Each table gets its own .py file containing the PySpark necessary to generate the tables. Pipeline files are located here `pipeline/bls_silver_to_gold_pyspark`. Personally, I prefer the PySpark approach to the SQL approach. I just prefer working with PySpark in a notebook to SQL in the instance of a DBX pipeline. <br>
+![image_1791648759306.png](./image_1791648759306.png "image_1791648759306.png")
 
 #### Gold
 ![image_1791566086863.png](./images/image_1791566086863.png "image_1791566086863.png")
