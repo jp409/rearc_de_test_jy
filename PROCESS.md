@@ -81,13 +81,13 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ![image_1791644396338.png](./images/image_1791644396338.png "image_1791644396338.png")<br>
 
 ### SQL
-1. 
+1.    <br>
 ![image_1791644435086.png](./images/image_1791644435086.png "image_1791644435086.png")
 <br>
-2. 
+2.     <br>
 ![image_1791644463288.png](./images/image_1791644463288.png "image_1791644463288.png")
 <br>
-3. 
+3.    <br>
 ![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
 
 ### Dashboard
