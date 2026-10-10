@@ -10,8 +10,10 @@
 - Pipeline located here. 
 
 #### Raw to Bronze
+Config files govern the Raw to Bronze load.
 
 #### Bronze to Silver
+Config files goveren the Bronze to Silver load. 
 
 #### Silver to Gold (SQL)
 - Config files profide SQL queries to generate tables
@@ -20,6 +22,7 @@
 ![image_1791566086863.png](./images/image_1791566086863.png "image_1791566086863.png")
 ## Trade-offs
 ## AI Usage
+AI was used to 
 ## Retrospective
 ## Answers
 ###PySpark
