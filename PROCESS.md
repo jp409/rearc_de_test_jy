@@ -15,33 +15,33 @@ I have built out the Databricks declaritave pipeline to mirror the Medallion arc
 ####Source to Raw
 - Data is ingested from both the BLS site and the us population site via Get API calls.
 - All files are saved in raw.BLS volume located at `/Volumes/workspace/raw/bls`. 
-- Metadata is stored in table in raw. 
+- Metadata is stored in the raw schema at `workspace.raw.ingestion_metadata`. 
 ![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
-- Upon rerun, only files with different ETags will be redownloaded. Missing Etags will go to modified date + size compairson.  
+- Upon rerun, only files with different ETags will be redownloaded. Tables with missing Etags will be compared with modified date + size compairson. This ensures that only new or updated data gets ingested. 
 - All new files are always downloaded. 
-- Pipeline located here. 
+- Loader is located here `loaders/bls_to_raw.py`. 
 
 #### Raw to Bronze
-Config files govern the Raw to Bronze load. Only files with enabled: True will be brought from raw to Bronze. The field insert_datetime is added to all records. 
+Config files govern the Raw to Bronze load. Config files are located here `config`. Only files with `enabled: True` will be brought from raw to Bronze. The field insert_datetime is added to all records for troubleshooting or reporting purposes. A possible functionality expansion could be to store snapshots based on this field. 
 
 #### Bronze to Silver
-Config files goveren the Bronze to Silver load. Only files with enabled: True will be brought from Bronze to Silver. Data id deduplicated and checked for nulls at this layer.
+Config files goveren the Bronze to Silver load. Config files are located here `config`. Only files with `enabled: True` will be brought from Bronze to Silver. Data is deduplicated and checked for nulls at this layer. Schema is configured in the config files as well. 
 
 #### Silver to Gold
 I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provided users with the necessary data for arriving at the answers. See answers section for actual answers. 
 ![image_1791642902572.png](./images/image_1791642902572.png "image_1791642902572.png")
 
 #####SQL
-- Config files provide the SQL to be ran in order to generate the Gold tables.
+- Config files provide the SQL to be ran in order to generate the Gold tables. Config files are located here `config/gold`. A generic loader loops through the config files and materializes only those with `enabled: True` configured. The SQL query is configurable in the files. 
 
 #####Pyspark
-- Each table gets its own .py file containing the Pyspark necessary to generate theables. 
+- Each table gets its own .py file containing the Pyspark necessary to generate theables. Pipeline files are located here `pipeline/bls_silver_to_gold_pyspark`. 
 
 #### Gold
 ![image_1791566086863.png](./images/image_1791566086863.png "image_1791566086863.png")
 - The Gold layer is modeled with two 'fact' tables - Data and Population. 
 - The Data table can be joined to six dimension talbes, constructed from the BLS data. 
-- The Population table only has one Dimensional table, country. 
+- The Population table only has one dimention table, country. 
 ## Trade-offs
 - Data could be appended in bronze, thereby creating historic snapshots. 
 - Source control the pipelines with CI/CD
