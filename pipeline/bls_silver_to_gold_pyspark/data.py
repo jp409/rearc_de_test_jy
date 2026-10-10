@@ -15,7 +15,11 @@ def create_gold_data_table():
     )
     silver_current_data = silver_current_data.withColumn("_priority", F.lit(1))
     silver_data = silver_current_data.unionByName(silver_all_data)
-    window = Window.partitionBy("id").orderBy("_priority")
+    window = (
+        Window
+        .partitionBy("series_id", "year", "quarter")
+        .orderBy("_priority")
+    )
     result = (
         silver_data
         .withColumn("_rank", F.row_number().over(window))
