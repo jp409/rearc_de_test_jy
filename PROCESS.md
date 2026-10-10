@@ -15,7 +15,7 @@ I have built out the Databricks declarative pipeline to mirror the medallion arc
 #### Source to Raw
 - Data is ingested from both the BLS site and the US Population Site via HTTP GET requests.
 - All files are saved in raw.BLS volume located at `/Volumes/workspace/raw/bls`. 
-- Metadata is stored in the raw schema at `workspace.raw.ingestion_metadata`. 
+- Metadata is stored in a table in the raw schema at `workspace.raw.ingestion_metadata`. 
 ![image_1791642737587.png](./images/image_1791642737587.png "image_1791642737587.png")
 - Upon rerun, only files with different ETags will be redownloaded. Tables with missing ETags will be compared with modified date + size comparison. This ensures that only new or updated data gets ingested. 
 - All new files are always downloaded. 
@@ -34,15 +34,15 @@ I have built out the Databricks declarative pipeline to mirror the medallion arc
 ![image_1791648859397.png](./images/image_1791648859397.png "image_1791648859397.png")
 
 #### Silver to Gold
-- I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provided users with the necessary data for arriving at the answers. See answers section for actual answers. <br>
+- I have built two examples of the Silver to Gold layer in order to satisfy the requirements of this assignment. I did not materialize the answers at the Gold layer but rather, built a production-ready data model that provides users with the necessary data for arriving at the answers. See answers section for actual answers. <br>
 ![image_1791642902572.png](./images/image_1791642902572.png "image_1791642902572.png")
 
-#####SQL
-- Config files provide the SQL to be ran in order to generate the Gold tables. Config files are located here `config/gold`. A generic loader loops through the config files and materializes only those with `enabled: True` configured. The SQL query is configurable in the files.<br>
-- Gole SQL tables: <br>
-![image_1791648787241.png](./image_1791648787241.png "image_1791648787241.png")
+##### SQL
+- Config files provide the SQL to be ran in order to generate the Gold tables. Config files are located here `config/gold`. A generic loader loops through the config files and materializes only those with `enabled: True` configured. The SQL queries are configurable in the files.<br>
+- Gold SQL tables: <br>
+![image_1791648787241.png](./images/image_1791648787241.png "image_1791648787241.png")
 
-#####PySpark
+##### PySpark
 - Each table gets its own .py file containing the PySpark necessary to generate the tables. Pipeline files are located here `pipeline/bls_silver_to_gold_pyspark`. Personally, I prefer the PySpark approach to the SQL approach. I just prefer working with PySpark in a notebook to SQL in the instance of a DBX pipeline. <br>
 - Gole PySpark tables: <br>
 ![image_1791648759306.png](./images/image_1791648759306.png "image_1791648759306.png")
@@ -59,6 +59,7 @@ In the interest of time, I could not implement all of the enhancements noted bel
 - Resources could be shared across all of Rearc. This way, consultants could save time while utilizing standardized code for specific things. 
 - Detailed logging should be added so that any issues can be quickly identified via a simple dashboard or alerts. This will also enable telemetry on the pipeline's function. 
 - Cost monitoring could be added to the pipelines. 
+- Rather than needing one file per Gold table (or one config for a SQL generated table), multiple tables could be configured in one file. Eventually, a repository could become so large it violates the maximum allowed size allowed by Git providers. 
 ## AI Usage
 AI was used to generate the initial version of all code. Additionally, it was used in troubleshooting errors. I made the necessary modifications to the generated code myself, as well as providing the overarching design. 
 ## Retrospective
