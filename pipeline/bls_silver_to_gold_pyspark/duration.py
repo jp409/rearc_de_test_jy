@@ -13,4 +13,5 @@ def create_gold_duration_table():
         .dropDuplicates([
             "duration_code",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

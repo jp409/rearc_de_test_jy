@@ -15,6 +15,7 @@ def create_bronze_table(file_name):
             .option("cloudFiles.format", "text")
             .option("pathGlobFilter", source_file)
             .load(BASE_PATH)
+            .withColumn("inserted_datetime", F.current_timestamp())
         )
 
 # Discover all files in the BLS volume

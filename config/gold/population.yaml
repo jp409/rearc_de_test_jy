@@ -3,6 +3,7 @@ sql: |
   SELECT
     nation_id,
     year,
-    population
+    population,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_population_json

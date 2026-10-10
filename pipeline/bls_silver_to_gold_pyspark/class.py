@@ -13,4 +13,5 @@ def create_gold_class_table():
         .dropDuplicates([
             "class_code",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

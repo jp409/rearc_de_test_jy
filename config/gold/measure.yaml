@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     measure_code,
-    measure_text
+    measure_text,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_measure

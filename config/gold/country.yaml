@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     nation_id,
-    nation
+    nation,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_population_json

@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     duration_code,
-    duration_text
+    duration_text,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_duration

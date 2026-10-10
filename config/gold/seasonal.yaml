@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     seasonal_code,
-    seasonal_text
+    seasonal_text,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_seasonal

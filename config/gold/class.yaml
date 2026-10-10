@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     class_code,
-    class_text
+    class_text,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_class

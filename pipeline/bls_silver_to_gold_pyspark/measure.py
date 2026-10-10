@@ -13,4 +13,5 @@ def create_gold_measure_table():
         .dropDuplicates([
             "measure_code",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

@@ -22,7 +22,7 @@ def register_table(config):
     sql = config["sql"]
 
     def query():
-        return spark.sql(sql)
+        return (spark.sql(sql) .withColumn("inserted_datetime", F.current_timestamp()))
 
     query.__name__ = f"gold_{table_name}"
     dp.table(name=table_name)(query)

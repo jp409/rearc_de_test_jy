@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     sector_code,
-    sector_name
+    sector_name,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_sector

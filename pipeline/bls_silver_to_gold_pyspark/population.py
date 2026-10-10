@@ -15,4 +15,5 @@ def create_gold_population_table():
             "nation_id",
             "year",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

@@ -36,7 +36,8 @@ sql: |
     series.class_code,
     series.measure_code,
     series.duration_code,
-    series.seasonal
+    series.seasonal,
+    current_timestamp() AS inserted_datetime
   FROM deduplicated deduped_data
   LEFT JOIN workspace.silver.silver_pr_series series
     ON deduped_data.series_id = series.series_id

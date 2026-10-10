@@ -13,4 +13,5 @@ def create_gold_seasonal_table():
         .dropDuplicates([
             "seasonal_code",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

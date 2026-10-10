@@ -13,4 +13,5 @@ def create_gold_period_table():
         .dropDuplicates([
             "period",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

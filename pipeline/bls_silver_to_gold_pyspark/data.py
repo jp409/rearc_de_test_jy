@@ -44,4 +44,5 @@ def create_gold_data_table():
             silver_series.duration_code,
             silver_series.seasonal,
         )
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

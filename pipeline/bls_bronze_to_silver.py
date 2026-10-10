@@ -236,7 +236,7 @@ def transform_text(bronze_df, silver_config):
         columns_config,
     )
 
-    return df
+    return df.withColumn( "inserted_datetime", F.current_timestamp(), )
 
 
 # --------------------------------------------------
@@ -349,7 +349,7 @@ def transform_json(bronze_df, silver_config):
         columns_config,
     )
 
-    return df
+    return df.withColumn( "inserted_datetime", F.current_timestamp(), )
 
 
 # --------------------------------------------------

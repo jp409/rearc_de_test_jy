@@ -13,4 +13,5 @@ def create_gold_sector_table():
         .dropDuplicates([
             "sector_code",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

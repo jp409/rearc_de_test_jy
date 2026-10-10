@@ -13,4 +13,5 @@ def create_gold_country_table():
         .dropDuplicates([
             "nation_id",
         ])
+        .withColumn( "inserted_datetime", F.current_timestamp(), )
     )

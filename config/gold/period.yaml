@@ -3,6 +3,7 @@ sql: |
   SELECT
   DISTINCT
     period,
-    period_name
+    period_name,
+    current_timestamp() AS inserted_datetime
   FROM
   workspace.silver.silver_pr_period
