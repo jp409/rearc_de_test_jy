@@ -70,7 +70,7 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ![image_1791644134885.png](./images/image_1791644134885.png "image_1791644134885.png")
 3. The SID PRS30006032 was not present in the data! However, below is an example of the values and previous population values for the SID PRS88003191. We could filter for any other SID and get the appropriate values as well. 
 ![image_1791644258250.png](./images/image_1791644258250.png "image_1791644258250.png")
-###PySpark
+### PySpark
 1. 
 ![image_1791644278772.png](./images/image_1791644278772.png "image_1791644278772.png")
 2. Uncomment to add class_text, or join another table for other fields. 
@@ -78,7 +78,7 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 3. 
 ![image_1791644396338.png](./images/image_1791644396338.png "image_1791644396338.png")
 
-###SQL
+### SQL
 1. 
 ![image_1791644435086.png](./images/image_1791644435086.png "image_1791644435086.png")
 
