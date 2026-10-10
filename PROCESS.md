@@ -1,4 +1,4 @@
-# Jayson Yurcho Rearc Data Engineering Test
+# Rearc Data Engineering Test
 ## Architecture
 The architecture of this data pipeline follows the traditional medallion architecture. I chose this because it is the current data pipeline standard and provides clean layers of functionality that are easy for engineers to understand. 
 ![image_1791642328437.png](./images/image_1791642328437.png "image_1791642328437.png")
