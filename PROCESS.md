@@ -74,6 +74,6 @@ I really enjoyed this assignment and learned a few things about Databricks that 
 ![image_1791644493453.png](./images/image_1791644493453.png "image_1791644493453.png")
 
 ### Dashboard
-![image_1791646361980.png](./image_1791646361980.png "image_1791646361980.png")
+![image_1791646361980.png](./images/image_1791646361980.png "image_1791646361980.png")
 
-![image_1791646419901.png](./image_1791646419901.png "image_1791646419901.png")
+![image_1791646419901.png](./images/image_1791646419901.png "image_1791646419901.png")
