@@ -48,12 +48,25 @@ AI was used to generate the initial version of all code. Additionally, it was us
 ## Retrospective
 I really enjoyed this assignment and learned a few things about Databricks that I did not know before. Personally, the most difficult part was ensuring I included enough functionalinty in the pipeline. Also, the rate limits on the free account prevented me from testing as much as I would have liked. 
 ## Answers
+1. **Mean**: 322,069,808 **STD**: 4,158,441.04
+2. Run code for full answer
+![image_1791644134885.png](./image_1791644134885.png "image_1791644134885.png")
+3. The SID PRS30006032 was not present in the data! However, below is an example of the values and previous population values for the SID PRS88003191. We could filter for any other SID and get the appropriate values as well. 
+![image_1791644258250.png](./image_1791644258250.png "image_1791644258250.png")
 ###PySpark
-1. answer
-2. answer
-3. answer
+1. 
+![image_1791644278772.png](./image_1791644278772.png "image_1791644278772.png")
+2. Uncomment to add class_text, or join another table for other fields. 
+![image_1791644325251.png](./image_1791644325251.png "image_1791644325251.png")
+3. 
+![image_1791644396338.png](./image_1791644396338.png "image_1791644396338.png")
 
 ###SQL
-1. answer
-2. answer
-3. answer
+1. 
+![image_1791644435086.png](./image_1791644435086.png "image_1791644435086.png")
+
+2. 
+![image_1791644463288.png](./image_1791644463288.png "image_1791644463288.png")
+
+3. 
+![image_1791644493453.png](./image_1791644493453.png "image_1791644493453.png")
